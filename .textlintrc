@@ -1,0 +1,20 @@
+{
+  "rules": {
+      "preset-japanese": true,
+      "preset-jtf-style": {
+          "3.1.1.全角文字と半角文字の間": false,
+          "3.1.2.全角文字どうし": false,
+          "4.2.6.ハイフン(-)": false,
+          "4.3.7.山かっこ<>": false,
+          "1.2.1.句点(。)と読点(、)": false
+      },
+      "no-dead-link": {
+        "checkRelative": false,
+        "baseURI": null,
+        "ignore": []
+      },
+      "ja-space-between-half-and-full-width": {
+            "space": "always"
+      }
+  }
+}
