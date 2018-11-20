@@ -7,7 +7,7 @@ React には以下の特徴があります。
 -   仮想 DOM
 -   コンポーネント指向
 -   JSX
--   単方向データフロー、prop、state ( <a href="./#/HowToReact2">次ページ</a>で解説）
+-   単方向データフロー、prop、state ( <a href="./HowToReact2">次ページ</a>で解説）
 
 ## 仮想 DOM について
 

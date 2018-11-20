@@ -120,7 +120,7 @@ componentDidUpdate
 
 ### 再描画が発生するポイント
 
-前回の <a href="./#/HowToReact3">HowToReact3</a> で説明したように setState によって、state が変更された時、また親から渡されている props が変更された時コンポーネントの再描画が行われます。  
+前回の <a href="./HowToReact3">HowToReact3</a> で説明したように setState によって、state が変更された時、また親から渡されている props が変更された時コンポーネントの再描画が行われます。  
 具体的には、
 
 ```

@@ -83,7 +83,7 @@ onChange に bind しているため、入力がある都度 state を更新す�
 -   メソッド内でこのコンポーネントを参照している（this Word など）。
 -   onClick などのイベントハンドラでメソッドが呼ばれる
 
-ということを<a href="./#/HowToReact3">HowToReact3</a>では紹介しました。そのため、上記コードでは onChange, onClick に指定されているメソッドを、bind します。
+ということを<a href="./HowToReact3">HowToReact3</a>では紹介しました。そのため、上記コードでは onChange, onClick に指定されているメソッドを、bind します。
 
 ```js
 constructor(){

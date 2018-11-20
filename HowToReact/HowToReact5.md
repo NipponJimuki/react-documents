@@ -69,7 +69,7 @@ class App extends Component {
 ReactDOM.render(<App />, document.getElementById('content'));
 ```
 
-以上が CSS in JS でのスタイリング方法になります。styles は App.js の中に定義されていますが、styles.js というファイルを作ってそれを読み込むようにすることもできます（こちらの方法については LibraryWeb アプリツアーの <a href="./#/styling">DevTourStyling</a> にて解説します）。
+以上が CSS in JS でのスタイリング方法になります。styles は App.js の中に定義されていますが、styles.js というファイルを作ってそれを読み込むようにすることもできます。
 
 スタイリングは CSS ではなく、JavaScript オブジェクトとして行います。
 
