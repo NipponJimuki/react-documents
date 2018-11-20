@@ -105,7 +105,7 @@ Redux の他に MobX というアーキテクチャもありますが、2018 年
 
 下記の図が Redux におけるアーキテクチャーを示している図です。これは、アーキテクチャのもつデータフローを示しています。
 
-<img src='./src/markDowns/imgs/HowToRedux/image-redux-unidir-ui-arch.jpg' />
+<img src='../img/HowToRedux/image-redux-unidir-ui-arch.jpg' />
 
 ## Redux の概念
 
