@@ -96,7 +96,7 @@ index.html を確認します。
 </head>
 <body>
     <div id="content"></div>
-    <script type="text/javascript" src="build/bundle.js"></script>
+    <script src="build/bundle.js"></script>
 </body>
 </html>
 ```
