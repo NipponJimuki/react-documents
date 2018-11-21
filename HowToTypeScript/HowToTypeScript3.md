@@ -143,11 +143,9 @@ type Props = {
     power: boolean;
 };
 
-class DisplayState extends React.PureComponent<Props> {
-    render() {
-        return <div style={{ width: '45px' }}>{this.props.power ? 'ON' : 'OFF'}</div>;
-    }
-}
+const DisplayState: React.SFC<Props> = ({ power = false }) => (
+    <div style={{ width: '45px' }}>{power ? 'ON' : 'OFF'}</div>
+);
 
 export default DisplayState;
 ```
@@ -261,7 +259,14 @@ formik の実装に切り替えたため、新しく UPDATE_ITEM というアク
 Action(changePowerState) => middleware => Dispatch(updateItem) => reducer
 ```
 
-を想定して作成しています。
+を想定して作成しています。  
+新しいファイルを作成したので、index.ts を編集します。
+
+```ts
+// actions/index.ts
+export * from './itemList';
+export * from './addItem';
+```
 
 ### itemList の変更
 

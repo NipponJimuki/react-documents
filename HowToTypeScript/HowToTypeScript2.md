@@ -74,7 +74,7 @@ type Props = {
 class ItemList extends React.Component<Props> {
     static defaultProps: Pick<Props, 'power' | 'changePowerStateAction'> = {
         power: false,
-        changePowerStateAction: () => {},
+        changePowerStateAction() {},
     };
     render() {
         const { power, changePowerStateAction } = this.props;
@@ -162,18 +162,14 @@ React.Component は 3 つの型引数を受け取ることができます。
 ItemList が呼び出している Switch.tsx と DisplayState.tsx をそれぞれ作成します。
 
 ```tsx
-// components/Switch.tsx
+// components/Schitw.tsx;
 import React from 'react';
 
 type Props = {
     onClick: () => void;
 };
 
-class Switch extends React.SFC<Props> {
-    render() {
-        return <button onClick={this.props.onClick}>スイッチ</button>;
-    }
-}
+const Switch: React.SFC<Props> = ({ onClick }) => <button onClick={onClick}>スイッチ</button>;
 
 export default Switch;
 ```
@@ -186,11 +182,7 @@ type Props = {
     power: boolean;
 };
 
-class DisplayState extends React.SFC<Props> {
-    render() {
-        return <div>{this.props.power ? 'ON' : 'OFF'}</div>;
-    }
-}
+const DisplayState: React.SFC<Props> = ({ power = false }) => <div>{power ? 'ON' : 'OFF'}</div>;
 
 export default DisplayState;
 ```
@@ -228,8 +220,8 @@ import { ItemList } from '../components';
 import { changePowerState } from '../actions';
 import { Store } from '../reducers';
 
-const mapStateToProps = (store: Store) => ({
-    ...store,
+const mapStateToProps = ({ powerState }: Store) => ({
+    ...powerState,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -241,7 +233,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(Main);
+)(ItemList);
 ```
 
 続いて、コンポーネントと同様に export するための index.ts を作成します。
