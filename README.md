@@ -18,7 +18,7 @@ React / Redux / TypeScript の HowToUse。
 -   HowToReact
 -   HowToRedux
 -   HowToTypeScript
--   ReactHooks（成果物のみ）
+-   HowToReactHooks（成果物のみ）
 
 今はこの 3 つだけです。
 ドキュメントに書き起こしていませんが、React Hooks を使ったツアーもあります。  
@@ -38,3 +38,17 @@ ES2015, React, Redux, TypeScript の基本を理解できてる上での上級�
     -   通信や認証、便利な関数群のユーティリティー
 
 こんなものもありますよーという紹介。
+
+## 各チュートリアルのプロジェクト
+
+ドキュメント内に記載していますが、こちらにまとめておきます。  
+各チュートリアルごとの成果物がここに別ブランチで管理しています。  
+何回やっても動かない時とかはこちらで答え合わせしてみてください。  
+そして、こっそり僕にチュートリアル通りにやっても動かないことを教えてくれると嬉しいです。
+
+| チュートリアル名 |                  プロジェクト URL                   |
+| :--------------: | :-------------------------------------------------: |
+|    HowToReact    |   https://github.com/NipponJimuki/HowToReact.git    |
+|    HowToRedux    |   https://github.com/NipponJimuki/HowToRedux.git    |
+| HowToTypeScript  | https://github.com/NipponJimuki/HowToTypeScript.git |
+| HowToReactHooks  | https://github.com/NipponJimuki/HowToReactHooks.git |
