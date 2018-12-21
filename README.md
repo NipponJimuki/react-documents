@@ -18,14 +18,12 @@ React / Redux / TypeScript の HowToUse。
 -   HowToReact
 -   HowToRedux
 -   HowToTypeScript
--   HowToReactHooks（成果物のみ）
+-   HowToReactHooks（一部ドキュメントを作成）
 
 今はこの 3 つだけです。
-ドキュメントに書き起こしていませんが、React Hooks を使ったツアーもあります。  
-HowToRedux を React Hooks の機能を使って全て Function Components で実装しています。  
-一切の説明はありませんが、成果物だけあります。  
+まだ全てをドキュメントに書き起こしていませんが、React Hooks を使ったツアーもあります。  
+HowToRedux を React Hooks の機能を使って全て Function Component で実装しています。  
 ES2015, React, Redux, TypeScript の基本を理解できてる上での上級者向けの内容です。  
-かなり早期に実装したので、実は useCallback の使い方とか間違ってる部分もある。。。
 
 ## 見せれないもの
 
