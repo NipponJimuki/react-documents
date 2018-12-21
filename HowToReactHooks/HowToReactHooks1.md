@@ -5,17 +5,15 @@
 **ESNext, React, Redux, TypeScript についての一通りの知識がある前提で行います。**  
 **なお、ツアー内で ESNext、TypeScript の構文の解説も行いません。**
 
-<br>
 HowToRedux で実装したものを React Hooks の機能のみを使って実装しなおします。
-また、いくつか機能の追加も行います。
-実装は全て React/ TypeScript です。
+また、いくつか機能の追加も行います。  
+実装は全て React/ TypeScript です。  
 
-<br>
+
 2018 年 12 月 21 日現在、React の最新バージョンは 16.7.0  で、React Hooks が使用できるのは 16.7.0-alpha.2 です。  
 16.7.0 にも React Hooks の API は追加されていますが、リリースノートには 「No, This Is Not The One With Hooks」と記載されております。  
 ツアーではalpha.2のバージョンを使用します。  
 
-<br>
 **こちらで紹介する書き方は将来大きく変更される可能性があります。**  
 また、言及してるものの多くは筆者の憶測が多分に含まれておりますので、参考程度の意見として見てください。
 
@@ -23,18 +21,15 @@ HowToRedux で実装したものを React Hooks の機能のみを使って実�
 
 React v16.7.0 より React Hooks（以下、Hooks）という機能が新しく追加されます。
 
-<br>
 今までの React の実装はクラスベースの Class Component と関数ベースの Stateless Functional Component（以下、SFC）の 2 つがありました。
 Class Component では state（状態）が扱えるのに対して、SFC では state を扱うことができません。
 
-<br>
 Hooks の機能を使うことで、関数ベースでありながら state やライフサイクルメソッドを扱うことができるようになります。
 
 Hooks では useState や useReducer など、React ユーザにとって見覚えのある言葉がいくつかでてきます。  
 また、recompose という Higher Order Components（以下、HOC）ベースのライブラリーを使ったことがあるユーザにとっても
 見覚えのある書き方がよくでてきます。
 
-<br>
 なお、componentDidMount の振る舞いやテストの仕方など、バグや未対応の実装も少なくないです。
 これから考えていくとのことです。
 
@@ -43,22 +38,21 @@ Hooks では useState や useReducer など、React ユーザにとって見覚�
 今までデファクトスタンダードだったものが変わり、非推奨となる技術まででています。
 以下が、Hooks の登場によって変わったものと変わりそうなものです。
 
-<br>
--   変わったもの
-    -   recompose : メンテナンスが打ち切られた
-    -   SFC : Function Component に名前が改められた（SFCという言葉はなくなる）
-    -   Redux : react-reduxがHooksとの接続を行う対応を開始した
--   変わりそうなもの
-    -   Class Component : いずれ非推奨の書き方になると予想される
-    -   HOC : コードの見通しが悪くなる機能と公式が言及
-    -   rednerProps : HOC の煽りを受け、どうなるかがわからない
-    -   各種ライブラリー : Hooks に対応されないものは淘汰されていく
 
-<br>
+- 変わったもの
+  - recompose : メンテナンスが打ち切られた
+  - SFC : Function Component に名前が改められた（SFCという言葉はなくなる）
+  - Redux : react-reduxがHooksとの接続を行う対応を開始した
+- 変わりそうなもの
+  - Class Component : いずれ非推奨の書き方になると予想される
+  - HOC : コードの見通しが悪くなる機能と公式が言及
+  - rednerProps : HOC の煽りを受け、どうなるかがわからない
+  - 各種ライブラリー : Hooks に対応されないものは淘汰されていく
+
+
 HOCやrenderPropsは、非推奨の技術とまでは言われていませんが、これらは
 Function Componentで全て代替できるようになるため、使われなくなっていく技術になると思われます。
 
-<br>
 また、Reactの各種サードパーティ（Formikやstyled-components）もHooksに対応してるか否かが
 ライブラリー選定の大きな分かれ目となっていくことが予想されます。
 
@@ -67,9 +61,8 @@ Function Componentで全て代替できるようになるため、使われな�
 Facebook は Class Component を断ち切るつもりはないと明言していますが、
 これからは、全てのコンポーネントが Function Component で作成されていくような流れにやがて変わっていきます。
 
-<br>
 SFC については、言葉そのものが無くなります。  
-最新の@types/react の実装では、Fucntion Component に既に改められています。
+最新の@types/react の実装では、FucntionComponent に既に改められています。
 互換性を保つために React.SFC という型定義は存在しますが、非推奨の型定義となっています。
 
 ```ts
@@ -95,22 +88,18 @@ type StatelessComponent<P = {}> = FunctionComponent<P>;
 ### Redux について
 
 ContextAPI や Suspense、Hooks を駆使することで、Redux 無しのアプリケーション構築がいよいよ現実味を帯びてきた感はあります。  
-ただ、redux-logger や redux-saga など現状の React では取って替わることのできない多くの機能があるのもまた事実です。
+ただ、redux-logger や redux-saga など現状の React では取って替わることのできない多くの機能があるのもまた事実です。  
 
-<br>
-着実に現実味は帯びてきていますが、まだまだ現実的ではないと思われます。
+着実に現実味は帯びてきていますが、まだまだ現実的ではないと思われます。  
 
-<br>
-Reduxはピュアな関数群であるため、直接的には影響はありません。
-現在、ReactとReduxの接続を担うreact-redux側がHooksとの対応を行っています。
+Reduxはピュアな関数群であるため、直接的には影響はありません。  
+現在、ReactとReduxの接続を担うreact-redux側がHooksとの対応を行っています。  
 
-<br>
 react-redux v6 で React との接続を行う ReactReduxContext が外だしされるようになっており、
 こちらを使うと alpha.2 でも Redux と組み合わせることは可能です。  
-ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。
+ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。  
 
-<br>
-react-redux側は、すぐにHooksに対応するつもりはないと言及しており、議論を重ねてどう対応していくか考えていく状態です。
+react-redux側は、すぐにHooksに対応するつもりはないと言及しており、議論を重ねてどう対応していくか考えていく状態です。  
 現状の実装はまだまだ実験的なものであると思われ、将来的には`useRedux`のようなAPIが作成されるのではないかと予想しています。
 
 ## React Hooks で追加された API
@@ -123,21 +112,20 @@ react-redux側は、すぐにHooksに対応するつもりはないと言及し�
 
 HooksAPI は Basic Hooks と Additional Hooks の 2 つに分かれており、カテゴライズは以下の通りになっています。
 
-<br>
--   Basic Hooks
-    -   useState
-    -   useEffect
-    -   useCotenxt
--   Addtional Hooks
-    -   useReducer
-    -   useCallback
-    -   useMemo
-    -   useRef
-    -   useImperativeMethods
-    -   useLayoutEffect
-    -   useMutationEffect
+- Basic Hooks
+  - useState
+  - useEffect
+  - useCotenxt
+- Addtional Hooks
+  - useReducer
+  - useCallback
+  - useMemo
+  - useRef
+  - useImperativeMethods
+  - useLayoutEffect
+  - useMutationEffect
 
-<br>
+
 **※ useMutationEffect は公式ページには記載されておりませんが、HooksAPI の 1 つとしてあります。**
 **基本的に非推奨の Hooks に指定されているので、公式ページには記載がないものと思われます。**
 
@@ -189,16 +177,13 @@ function TodoComp() {
 componentDidMount, componentDidUpdate, componentWillUnMount 相当の役割を担います。  
 useEffect は 2 つの引数を取ることができ、第 1 引数に処理を、第 2 引数にメモライズキーを渡すことができます。
 
-<br>
 第2引数のメモライズキーとは配列で、配列の中に渡した値に変更があった時だけuseEffectを実行させるトリガーとなります。
 この引数によって振る舞いが変わる性質を利用し、異なるライフサイクルメソッド相当の動きを行います。
 
-<br>
 - 第2引数に空の配列を渡す => componentDidMount, componentWillUnMount
 - 第2引数に配列を渡す => componentDidUpdate
 
-<br>
-useEffectはReactのライフサイクルメソッドと違い、DOM更新処理後に非同期で呼ばれます。
+useEffectはReactのライフサイクルメソッドと違い、DOM更新処理後に非同期で呼ばれます。  
 同期的に呼ばれることを保証したい場合は後述するuseLayoutEffect, useMutationEffect を使います。
 
 #### componentDidMount, componentWillUnMount の実装
@@ -249,7 +234,7 @@ Hooks で createContext を使う場合に使用する API になります。
 ツアー内で Context を使った実装はしていませんが、Redux で connect していたコンポーネントを useContext を使って同等の操作を行うことができます。
 
 使用シーンとしては、後述する useReducer を使って状態と更新をまとめあげたものを、useContext を使って props として受け取るということができます。  
-ツアーでも使使わないので、詳しい説明は省きます。
+ツアーでも使わないので、詳しい説明は省きます。
 
 ### useReducer
 
@@ -352,9 +337,8 @@ return (
 ### useRef
 
 Hooks で ref を使う場合に使用する API です。  
-createRef で作成していた ref が useRef に変わっています。
+createRef で作成していた ref が useRef に変わっています。  
 
-<br>
 ```jsx
 const inputEl = useRef(null);
 useEffect(() => {
@@ -362,10 +346,8 @@ useEffect(() => {
 }, []);
 
 return <input type="text" ref={inputEl} />;
-
 ```
 
-<br>
 初回レンダリング時に input エレメントにフォーカスするような場面で使ったりします。
 基本的な利用用途は今までの ref と同じになります。
 
@@ -375,7 +357,6 @@ ref に対して特定の処理を紐づけることができる際に使用す�
 また、forwardRef を使って ref 経由で親からアクセスさせる際に、ref のオブジェクトをカスタマイズさせるといったことも
 この API を使えば行うことができます。
 
-<br>
 使用シーンはそんなに多くないと思います。
 
 ### useLayoutEffect
@@ -391,5 +372,5 @@ componentDidUpdate と同じタイミングで呼ばれます。
 React が DOM を更新するのと同じタイミングで同期的に呼び出されます。
 
 DOM の更新中に実行されるため、使い方によってはパフォーマンス悪影響を及ぼす可能性があります。
-<br>
+
 特に理由がない限り、使わないようにする非推奨の API に指定されています。
