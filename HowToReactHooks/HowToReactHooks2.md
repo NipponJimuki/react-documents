@@ -231,7 +231,6 @@ ref オブジェクトの型ですが、useRef に型引数で HTMLInputElement 
 HowToReactHooks1 でも解説しましたが、useEffect は非同期で呼ばれます。  
 そのため、DOM オブジェクトにアクセスできるようになる前に処理が走った時は、フォーカスされません。
 
-<br>
 useEffect ではなく、useLayoutEffect を使うと確実にフォーカスさせることができます。
 
 ### Enter キー押下で送信させる

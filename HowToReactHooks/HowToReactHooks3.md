@@ -137,7 +137,6 @@ export default App;
 useReducer の第 1 引数に reducer を、第 2 引数に initialState を渡して初期化を行います。  
 state の取得は、initialState がオブジェクトになっているので、分割代入で取得をします。
 
-<br>
 useReducer の第 2 返却値の dispatch 関数は type プロパティを持つオブジェクトを受け取るようになっています。  
 reducer 内で定義した action 関数を実行して得られるオブジェクトを渡しています。
 

@@ -7,12 +7,11 @@
 
 HowToRedux で実装したものを React Hooks の機能のみを使って実装しなおします。
 また、いくつか機能の追加も行います。  
-実装は全て React/ TypeScript です。  
-
+実装は全て React/ TypeScript です。
 
 2019 年 1 月 21 日現在、React の最新バージョンは 16.7.0  で、React Hooks が使用できるのは 16.8.0-alpha.1 です。  
 16.7.0 にも React Hooks の API は追加されていますが、リリースノートには 「No, This Is Not The One With Hooks」と記載されております。  
-16.7.0 では些細なバグの報告もされておりますので、ツアーでは 16.8.0-alpha.1 のバージョンを使用します。  
+16.7.0 では些細なバグの報告もされておりますので、ツアーでは 16.8.0-alpha.1 のバージョンを使用します。
 
 **こちらで紹介する書き方は将来大きく変更される可能性があります。**  
 また、言及してるものの多くは筆者の憶測が多分に含まれておりますので、参考程度の意見として見てください。
@@ -38,22 +37,20 @@ Hooks では useState や useReducer など、React ユーザにとって見覚�
 今までデファクトスタンダードだったものが変わり、非推奨となる技術まででています。
 以下が、Hooks の登場によって変わったものと変わりそうなものです。
 
+-   変わったもの
+    -   recompose : メンテナンスが打ち切られた
+    -   SFC : Function Component に名前が改められた（SFC という言葉はなくなる）
+    -   Redux : react-redux が Hooks との接続を行う対応を開始した
+-   変わりそうなもの
+    -   Class Component : いずれ非推奨の書き方になると予想される
+    -   HOC : コードの見通しが悪くなる機能と公式が言及
+    -   rednerProp : HOC の煽りを受け、どうなるかがわからない
+    -   各種ライブラリー : Hooks に対応されないものは淘汰されていく
 
-- 変わったもの
-  - recompose : メンテナンスが打ち切られた
-  - SFC : Function Component に名前が改められた（SFCという言葉はなくなる）
-  - Redux : react-reduxがHooksとの接続を行う対応を開始した
-- 変わりそうなもの
-  - Class Component : いずれ非推奨の書き方になると予想される
-  - HOC : コードの見通しが悪くなる機能と公式が言及
-  - rednerProp : HOC の煽りを受け、どうなるかがわからない
-  - 各種ライブラリー : Hooks に対応されないものは淘汰されていく
+HOC や renderProp は、非推奨の技術とまでは言われていませんが、これらは
+Function Component で全て代替できるようになるため、使われなくなっていく技術になると思われます。
 
-
-HOCやrenderPropは、非推奨の技術とまでは言われていませんが、これらは
-Function Componentで全て代替できるようになるため、使われなくなっていく技術になると思われます。
-
-また、Reactの各種サードパーティ（Formikやstyled-components）もHooksに対応してるか否かが
+また、React の各種サードパーティ（Formik や styled-components）も Hooks に対応してるか否かが
 ライブラリー選定の大きな分かれ目となっていくことが予想されます。
 
 #### Class Component と SFC について
@@ -88,16 +85,16 @@ type StatelessComponent<P = {}> = FunctionComponent<P>;
 ### Redux について
 
 ContextAPI や Suspense、Hooks を駆使することで、Redux 無しのアプリケーション構築がいよいよ現実味を帯びてきた感はあります。  
-ただ、redux-logger や redux-saga など現状の React では取って替わることのできない多くの機能があるのもまた事実です。  
+ただ、redux-logger や redux-saga など現状の React では取って替わることのできない多くの機能があるのもまた事実です。
 
-着実に現実味は帯びてきていますが、まだまだ現実的ではないと思われます。  
+着実に現実味は帯びてきていますが、まだまだ現実的ではないと思われます。
 
-Reduxはピュアな関数群であるため、直接的には影響はありません。  
-現在、ReactとReduxの接続を担うreact-redux側がHooksとの対応を行っています。  
+Redux はピュアな関数群であるため、直接的には影響はありません。  
+現在、React と Redux の接続を担う react-redux 側が Hooks との対応を行っています。
 
 react-redux v6 で React との接続を行う ReactReduxContext が外だしされるようになっており、
 こちらを使うと alpha.2 でも Redux と組み合わせることは可能です。  
-ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。  
+ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。
 
 react-redux v6 で React との接続を行う ReactReduxContext が外だしされるようになっており、
 こちらを使うと alpha.1 でも Redux と組み合わせることは可能です。  
@@ -113,19 +110,18 @@ react-redux v6 で React との接続を行う ReactReduxContext が外だしさ
 
 HooksAPI は Basic Hooks と Additional Hooks の 2 つに分かれており、カテゴライズは以下の通りになっています。
 
-- Basic Hooks
-  - useState
-  - useEffect
-  - useCotenxt
-- Addtional Hooks
-  - useReducer
-  - useCallback
-  - useMemo
-  - useRef
-  - useImperativeMethods
-  - useLayoutEffect
-  - useMutationEffect
-
+-   Basic Hooks
+    -   useState
+    -   useEffect
+    -   useCotenxt
+-   Addtional Hooks
+    -   useReducer
+    -   useCallback
+    -   useMemo
+    -   useRef
+    -   useImperativeMethods
+    -   useLayoutEffect
+    -   useMutationEffect
 
 **※ useMutationEffect は公式ページには記載されておりませんが、HooksAPI の 1 つとしてあります。**
 **基本的に非推奨の Hooks に指定されているので、公式ページには記載がないものと思われます。**
@@ -178,14 +174,14 @@ function TodoComp() {
 componentDidMount, componentDidUpdate, componentWillUnMount 相当の役割を担います。  
 useEffect は 2 つの引数を取ることができ、第 1 引数に処理を、第 2 引数にメモライズキーを渡すことができます。
 
-第2引数のメモライズキーとは配列で、配列の中に渡した値に変更があった時だけuseEffectを実行させるトリガーとなります。
+第 2 引数のメモライズキーとは配列で、配列の中に渡した値に変更があった時だけ useEffect を実行させるトリガーとなります。
 この引数によって振る舞いが変わる性質を利用し、異なるライフサイクルメソッド相当の動きを行います。
 
-- 第2引数に空の配列を渡す => componentDidMount, componentWillUnMount
-- 第2引数に配列を渡す => componentDidUpdate
+-   第 2 引数に空の配列を渡す => componentDidMount, componentWillUnMount
+-   第 2 引数に配列を渡す => componentDidUpdate
 
-useEffectはReactのライフサイクルメソッドと違い、DOM更新処理後に非同期で呼ばれます。  
-同期的に呼ばれることを保証したい場合は後述するuseLayoutEffect, useMutationEffect を使います。
+useEffect は React のライフサイクルメソッドと違い、DOM 更新処理後に非同期で呼ばれます。  
+同期的に呼ばれることを保証したい場合は後述する useLayoutEffect, useMutationEffect を使います。
 
 #### componentDidMount, componentWillUnMount の実装
 
@@ -260,7 +256,6 @@ Provider の作成は今まで通り、ContextAPI で作成したコンポーネ
 子コンポーネントで取り出すことができるようになります。  
 Provider の子コンポーネントである Counter と AdjustButtons で Context を受け取る場合は
 
-
 ```jsx
 import { CounterContext } from './Root';
 
@@ -333,7 +328,7 @@ action の type プロパティ（と payload）を渡して、状態の更新�
 
 メモ化されたコールバック関数を返す API です。  
 useEffect 同様、第 2 引数にメモライズキーを渡すことで、関心ごとを分離できます。  
-メモライズキーに変更があった場合のみに関数を再作成して渡すことができるので、onClick や onChange に props 経由で渡す場合のレンダリングを抑制することができます。多くの場合、React.memo と併用して使うことが多いです。  
+メモライズキーに変更があった場合のみに関数を再作成して渡すことができるので、onClick や onChange に props 経由で渡す場合のレンダリングを抑制することができます。多くの場合、React.memo と併用して使うことが多いです。
 
 ```jsx
 const CustomButton = React.memo(function({ label, onClick }) {
@@ -356,7 +351,6 @@ function ResetButton({ label }) {
 メモ化された値を返す API です。
 こちらも第 2 引数にメモライズキーを渡すことで、関心ごとを分離できます。
 使い方としては、useCallback と同じように不要なレンダリングを避ける目的で使うことが多いです。
-<br>
 
 ```jsx
 const [count, setCount] = useState(0);
@@ -382,7 +376,7 @@ return (
 ### useRef
 
 Hooks で ref を使う場合に使用する API です。  
-createRef で作成していた ref が useRef に変わっています。  
+createRef で作成していた ref が useRef に変わっています。
 
 ```jsx
 const inputEl = useRef(null);
