@@ -10,16 +10,16 @@ HowToRedux で実装したものを React Hooks の機能のみを使って実�
 実装は全て React/ TypeScript です。  
 
 
-2018 年 12 月 21 日現在、React の最新バージョンは 16.7.0  で、React Hooks が使用できるのは 16.7.0-alpha.2 です。  
+2019 年 1 月 21 日現在、React の最新バージョンは 16.7.0  で、React Hooks が使用できるのは 16.8.0-alpha.1 です。  
 16.7.0 にも React Hooks の API は追加されていますが、リリースノートには 「No, This Is Not The One With Hooks」と記載されております。  
-ツアーではalpha.2のバージョンを使用します。  
+16.7.0 では些細なバグの報告もされておりますので、ツアーでは 16.8.0-alpha.1 のバージョンを使用します。  
 
 **こちらで紹介する書き方は将来大きく変更される可能性があります。**  
 また、言及してるものの多くは筆者の憶測が多分に含まれておりますので、参考程度の意見として見てください。
 
 ## React Hooks
 
-React v16.7.0 より React Hooks（以下、Hooks）という機能が新しく追加されます。
+React v16.8.0 より React Hooks（以下、Hooks）という機能が新しく追加されます。
 
 今までの React の実装はクラスベースの Class Component と関数ベースの Stateless Functional Component（以下、SFC）の 2 つがありました。
 Class Component では state（状態）が扱えるのに対して、SFC では state を扱うことができません。
@@ -30,7 +30,7 @@ Hooks では useState や useReducer など、React ユーザにとって見覚�
 また、recompose という Higher Order Components（以下、HOC）ベースのライブラリーを使ったことがあるユーザにとっても
 見覚えのある書き方がよくでてきます。
 
-なお、componentDidMount の振る舞いやテストの仕方など、バグや未対応の実装も少なくないです。
+なお、componentDidMount 相当の振る舞いやテストの仕方など、バグや未対応の実装も少なくないです。
 これから考えていくとのことです。
 
 ### Hooks の登場によって変わったもの変わりそうなもの
@@ -46,11 +46,11 @@ Hooks では useState や useReducer など、React ユーザにとって見覚�
 - 変わりそうなもの
   - Class Component : いずれ非推奨の書き方になると予想される
   - HOC : コードの見通しが悪くなる機能と公式が言及
-  - rednerProps : HOC の煽りを受け、どうなるかがわからない
+  - rednerProp : HOC の煽りを受け、どうなるかがわからない
   - 各種ライブラリー : Hooks に対応されないものは淘汰されていく
 
 
-HOCやrenderPropsは、非推奨の技術とまでは言われていませんが、これらは
+HOCやrenderPropは、非推奨の技術とまでは言われていませんが、これらは
 Function Componentで全て代替できるようになるため、使われなくなっていく技術になると思われます。
 
 また、Reactの各種サードパーティ（Formikやstyled-components）もHooksに対応してるか否かが
@@ -99,8 +99,9 @@ react-redux v6 で React との接続を行う ReactReduxContext が外だしさ
 こちらを使うと alpha.2 でも Redux と組み合わせることは可能です。  
 ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。  
 
-react-redux側は、すぐにHooksに対応するつもりはないと言及しており、議論を重ねてどう対応していくか考えていく状態です。  
-現状の実装はまだまだ実験的なものであると思われ、将来的には`useRedux`のようなAPIが作成されるのではないかと予想しています。
+react-redux v6 で React との接続を行う ReactReduxContext が外だしされるようになっており、
+こちらを使うと alpha.1 でも Redux と組み合わせることは可能です。  
+ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。
 
 ## React Hooks で追加された API
 
@@ -228,18 +229,65 @@ useEffect(
 10 に達したらリセットするような処理を行います。  
 この際、fake が更新されても useEffect が実行されることはありません。
 
-### useContext
+## useContext
 
-Hooks で createContext を使う場合に使用する API になります。  
-ツアー内で Context を使った実装はしていませんが、Redux で connect していたコンポーネントを useContext を使って同等の操作を行うことができます。
+Hooks で ContextAPI を使う場合に使用する API になります。  
+ツアー内で ContextAPI を使った実装はしていませんが、Redux で connect していたコンポーネントを useContext を使って同等の操作を行うことができます。
 
 使用シーンとしては、後述する useReducer を使って状態と更新をまとめあげたものを、useContext を使って props として受け取るということができます。  
-ツアーでも使わないので、詳しい説明は省きます。
+イベントのトリガーとなる dispatch 関数のバケツリレーを回避することなどができます。
+
+```jsx
+export const CounterContext = React.createContext(null);
+
+const Provider = ({ children }) => {
+    const [state, dispatch] = useReducer(rootReducer, undefined, { type: 'INIT' });
+
+    return (
+        <CounterContext.Provider value={{ state, dispatch }}>{children}</CounterContext.Provider>
+    );
+};
+
+const App = () => (
+    <Provider>
+        <Counter />
+        <AdjustButtons />
+    </Provider>
+);
+```
+
+Provider の作成は今まで通り、ContextAPI で作成したコンポーネントに対して、管理したい値を value に渡すことで
+子コンポーネントで取り出すことができるようになります。  
+Provider の子コンポーネントである Counter と AdjustButtons で Context を受け取る場合は
+
+
+```jsx
+import { CounterContext } from './Root';
+
+const Counter = () => {
+    const { state } = useContext(CounterContext);
+
+    return (
+        <div>{state.count}</div>
+    );
+}
+
+const AdjustButtons = () => {
+    const { dispatch } = useContext(CounterContext);
+
+    return (
+        <button onClick={() => dispatch({ type: 'INCREMENT' })}>＋</button>
+        <button onClick={() => dispatch({ type: 'DECREMENT' })}>ー</button>
+    );
+}
+```
+
+このように useContext に ContextAPI で作成したコンポーネントを渡すことで値を取り出すことができます。
 
 ### useReducer
 
 useState の代替 API で、状態と更新の全てを useReducer に任せることができるようになります。  
-useState の Redux の reducer 版です。
+Redux で扱う reducer と同等の状態管理にすることができます。
 
 ```js
 const initialState = {
@@ -286,7 +334,6 @@ action の type プロパティ（と payload）を渡して、状態の更新�
 メモ化されたコールバック関数を返す API です。  
 useEffect 同様、第 2 引数にメモライズキーを渡すことで、関心ごとを分離できます。  
 メモライズキーに変更があった場合のみに関数を再作成して渡すことができるので、onClick や onChange に props 経由で渡す場合のレンダリングを抑制することができます。多くの場合、React.memo と併用して使うことが多いです。  
-<br>
 
 ```jsx
 const CustomButton = React.memo(function({ label, onClick }) {
@@ -300,7 +347,6 @@ function ResetButton({ label }) {
 }
 ```
 
-<br>
 このコードでは、親となる ResetButton で onClick を定義しています。  
 この時、useCallback の第 2 引数には空の配列が指定されるので一度定義された onClick が再作成されることはありません。  
 子となる CustomButton は React.memo でメモライズ化しているので、label に変更があった場合のみ再レンダリングされるようになります。
@@ -329,7 +375,6 @@ return (
 );
 ```
 
-<br>
 ボタンによるカウントとテキストを入力できるコンポーネントで、isReset の値は count 値に変更があった場合にのみ比較を行い
 値の変更を監視するということができるようになります。  
 ボタンは 10 までカウントできますが、それ以上カウントできなくなり、リセットボタンの押下をユーザに促せることができます。
