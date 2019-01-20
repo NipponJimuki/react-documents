@@ -65,7 +65,7 @@ createContext で作成するコンテキストの型は、Provider の value �
 ここでは useReducer の dispatch 関数を管理しています。  
 useReducer から返却される dispatch の型は
 
-<img width="650" src="../imgs/HowToReactHooks/dispatchType.png">
+<img width="650" src="../img/HowToReactHooks/dispatchType.png">
 
 このようになっています。  
 React.Dispatch の中のオブジェクトの型は reducer が期待しているアクションと同じになっているので
@@ -405,7 +405,7 @@ shouldComponentUpdate とは逆で、コールバック関数が**false を返�
 
 リファクタリング実施後のコードでは、下記のようにレンダリングがハイライトされるようになりました。
 
-<img width="650" src="../imgs/HowToReactHooks/afterRenderHighlight.gif">
+<img width="650" src="../img/HowToReactHooks/afterRenderHighlight.gif">
 
 電源ボタンを押した際に全ての要素が再レンダリングされていましたが、電源の ON/OFF を示す要素のみハイライトされるように変わりました。  
 テキストフィールドもハイライトはされていますが、Function Component 内にまで処理は届いておらずレンダリングはされていません。

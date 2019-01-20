@@ -335,7 +335,7 @@ export default Switch;
 Redux を使わずに家電管理アプリケーションを作成することができました。  
 アプリケーションの動作自体には問題はありませんが、実はこのアプリケーションは不要なレンダリング処理が何回も走っています。
 
-<img width="650" src="../imgs/HowToReactHooks/beforeRenderHighlight.gif">
+<img width="650" src="../img/HowToReactHooks/beforeRenderHighlight.gif">
 
 上記アニメーションから、電源スイッチを押下した時と家電を追加した時に全ての要素が再レンダリングされていることがわかります。  
 HowToRedux、HowToTypeScript はここで終了でしたが、HowToReactHooks では更に
