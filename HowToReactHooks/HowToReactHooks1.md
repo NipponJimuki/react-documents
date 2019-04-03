@@ -5,22 +5,19 @@
 **ESNext, React, Redux, TypeScript についての一通りの知識がある前提で行います。**  
 **なお、ツアー内で ESNext、TypeScript の構文の解説も行いません。**
 
-HowToRedux で実装したものを React Hooks の機能のみを使って実装しなおします。
-また、いくつか機能の追加も行います。  
-実装は全て React/ TypeScript です。
+HowToRedux で実装したものを React Hooks の機能のみを使って実装しなおします。  
+実装は全て TypeScript / React です。  
+また、いくつか機能の追加も行います。
 
-2019 年 1 月 21 日現在、React の最新バージョンは 16.7.0  で、React Hooks が使用できるのは 16.8.0-alpha.1 です。  
-16.7.0 にも React Hooks の API は追加されていますが、リリースノートには 「No, This Is Not The One With Hooks」と記載されております。  
-16.7.0 では些細なバグの報告もされておりますので、ツアーでは 16.8.0-alpha.1 のバージョンを使用します。
+2019 年 4 月 2 日現在、React の最新バージョンは 16.8.6  で、16.8.0 以上であれば React Hooks を使うことができます。
 
-**こちらで紹介する書き方は将来大きく変更される可能性があります。**  
-また、言及してるものの多くは筆者の憶測が多分に含まれておりますので、参考程度の意見として見てください。
+なお、言及してるものの多くは筆者の憶測が多分に含まれておりますので、参考程度の意見として見てください。
 
 ## React Hooks
 
 React v16.8.0 より React Hooks（以下、Hooks）という機能が新しく追加されます。
 
-今までの React の実装はクラスベースの Class Component と関数ベースの Stateless Functional Component（以下、SFC）の 2 つがありました。
+今までの React の実装はクラスベースの Statefull Class Component と関数ベースの Stateless Functional Component（以下、SFC）の 2 つがありました。
 Class Component では state（状態）が扱えるのに対して、SFC では state を扱うことができません。
 
 Hooks の機能を使うことで、関数ベースでありながら state やライフサイクルメソッドを扱うことができるようになります。
@@ -29,7 +26,7 @@ Hooks では useState や useReducer など、React ユーザにとって見覚�
 また、recompose という Higher Order Components（以下、HOC）ベースのライブラリーを使ったことがあるユーザにとっても
 見覚えのある書き方がよくでてきます。
 
-なお、componentDidMount 相当の振る舞いやテストの仕方など、バグや未対応の実装も少なくないです。
+なお、componentDidCatch 相当の振る舞いやテストの仕方など、バグや未対応の実装も少なくないです。  
 これから考えていくとのことです。
 
 ### Hooks の登場によって変わったもの変わりそうなもの
@@ -92,17 +89,16 @@ ContextAPI や Suspense、Hooks を駆使することで、Redux 無しのアプ
 Redux はピュアな関数群であるため、直接的には影響はありません。  
 現在、React と Redux の接続を担う react-redux 側が Hooks との対応を行っています。
 
-react-redux v6 で React との接続を行う ReactReduxContext が外だしされるようになっており、
-こちらを使うと alpha.2 でも Redux と組み合わせることは可能です。  
-ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。
+react-redux v7.0.0-beta.0 で React との接続を行う ReactReduxContext が外だしされるようになっており、
+こちらを使うと Redux と組み合わせることは可能です。  
+ただし、React が v16.8.4 以降のバージョンであることが必須となっております。
 
-react-redux v6 で React との接続を行う ReactReduxContext が外だしされるようになっており、
-こちらを使うと alpha.1 でも Redux と組み合わせることは可能です。  
-ただし、state の変更に過敏で、レンダリングの抑制など自前で実装しないといけないなどの問題があります。
+react-redux 側は、すぐに Hooks に対応するつもりはないと言及しており、議論を重ねてどう対応していくか考えていく状態です。  
+現状の実装はまだまだ実験的なものであると思われ、プロダクション環境で使うには十分な検討が必要です。
 
 ## React Hooks で追加された API
 
-現在、Hooks で使える API は 10 こあります。
+現在、Hooks で使える API は 10 こあります。  
 全ての API は use から始まる名称となります。  
 また、Custom Hooks を作ることもでき、その場合も use から始まる名称であるべきと紹介されています。
 
@@ -113,18 +109,15 @@ HooksAPI は Basic Hooks と Additional Hooks の 2 つに分かれており、�
 -   Basic Hooks
     -   useState
     -   useEffect
-    -   useCotenxt
+    -   useContext
 -   Addtional Hooks
     -   useReducer
     -   useCallback
     -   useMemo
     -   useRef
-    -   useImperativeMethods
+    -   useDebugValue
+    -   useImperativeHandle
     -   useLayoutEffect
-    -   useMutationEffect
-
-**※ useMutationEffect は公式ページには記載されておりませんが、HooksAPI の 1 つとしてあります。**
-**基本的に非推奨の Hooks に指定されているので、公式ページには記載がないものと思われます。**
 
 ### useState
 
@@ -171,17 +164,18 @@ function TodoComp() {
 ### useEffect
 
 イベントリスナーの追加や DOM のアタッチなどの副作用を記述する時はこの API を使います。  
-componentDidMount, componentDidUpdate, componentWillUnMount 相当の役割を担います。  
-useEffect は 2 つの引数を取ることができ、第 1 引数に処理を、第 2 引数にメモライズキーを渡すことができます。
+componentDidMount, componentDidUpdate, componentWillUnMount, getSnapshotBeforeUpdate 相当の役割を担います。  
+useEffect は 2 つの引数を取ることができ、第 1 引数に処理を、第 2 引数にメモライズキーを渡すことができます。  
+この第 2 引数と内部の処理によっては getDerivedStateFromProps 相当の役割を果たすこともできます。
 
-第 2 引数のメモライズキーとは配列で、配列の中に渡した値に変更があった時だけ useEffect を実行させるトリガーとなります。
+第 2 引数のメモライズキーとは配列で、配列の中に渡した値に変更があった時だけ useEffect を実行させるトリガーとなります。  
 この引数によって振る舞いが変わる性質を利用し、異なるライフサイクルメソッド相当の動きを行います。
 
 -   第 2 引数に空の配列を渡す => componentDidMount, componentWillUnMount
--   第 2 引数に配列を渡す => componentDidUpdate
+-   第 2 引数に配列を渡す => componentDidUpdate, getSnapshotBeforeUpdate
 
 useEffect は React のライフサイクルメソッドと違い、DOM 更新処理後に非同期で呼ばれます。  
-同期的に呼ばれることを保証したい場合は後述する useLayoutEffect, useMutationEffect を使います。
+同期的に呼ばれることを保証したい場合は後述する useLayoutEffect を使います。
 
 #### componentDidMount, componentWillUnMount の実装
 
@@ -208,22 +202,41 @@ useEffect(() => {
 const [fake, setFake] = useState(false);
 const [count, setCount] = useState(0);
 
-useEffect(
-    () => {
-        console.log(`current value = ${count}`);
-        if (count === 10) {
-            console.log('maximum count');
-            setCount(0);
-            console.log('reset complete!!');
-        }
-    },
-    [count],
-);
+useEffect(() => {
+    console.log(`current value = ${count}`);
+    if (count === 10) {
+        console.log('maximum count');
+        setCount(0);
+        console.log('reset complete!!');
+    }
+}, [count]);
 ```
 
 この useEffect は count 値を監視しており、count 値に変更があった場合にのみ実行されます。
 10 に達したらリセットするような処理を行います。  
 この際、fake が更新されても useEffect が実行されることはありません。
+
+#### getSnapshotBeforeUpdate の実装
+
+```jsx
+function RectComponent({ location }) {
+    const divEl = useRef(null);
+    const [rect, setRect] = useState({});
+
+    useEffect(() => {
+        if (divEl) {
+            const clientRect = divEl.getBoundingClientRect();
+            setRect(clientRect);
+        }
+    }, [location.pathname]);
+
+    /* 以下省略 */
+}
+```
+
+この useEffect は props.location を監視しており、ロケーション情報に変更があった場合にクライアント座標をセットし直しています。  
+useEffect は DOM 更新処理後に呼ばれ、DOM にアクセスすることもできます。  
+このように DOM の値を参照をする場合は getSnapshotBeforeUpdate 相当の実装になります。
 
 ## useContext
 
@@ -331,14 +344,15 @@ useEffect 同様、第 2 引数にメモライズキーを渡すことで、関�
 メモライズキーに変更があった場合のみに関数を再作成して渡すことができるので、onClick や onChange に props 経由で渡す場合のレンダリングを抑制することができます。多くの場合、React.memo と併用して使うことが多いです。
 
 ```jsx
-const CustomButton = React.memo(function({ label, onClick }) {
+function CustomButton({ label, onClick }) {
     return <button onClick={onClick}>{label}</button>;
 });
+React.memo(CustomButton);
 
-function ResetButton({ label }) {
+function ResetButton({ label = 'リセット' }) {
     const onClick = useCallback(() => window.alert('done!!'), []);
 
-    return <CustomButton label={label || 'リセット'} onClick={onClick} />;
+    return <CustomButton label={label} onClick={onClick} />;
 }
 ```
 
@@ -390,7 +404,77 @@ return <input type="text" ref={inputEl} />;
 初回レンダリング時に input エレメントにフォーカスするような場面で使ったりします。
 基本的な利用用途は今までの ref と同じになります。
 
-### useImperativeMethods
+### useDebugValue
+
+16.8.0 より新しく追加された API になります（Hooks は 16.7.0 のアルファ版から使えるようになっておりました）。  
+その名の通り、デバッグに使う Hooks です。  
+主な使用用途は、共有ライブラリ等で独自のフックシステムを構築しているカスタムフックの現在値チェックなどに使います。
+
+```jsx
+function useCustomHooks() {
+    const [text, setText] = useState('');
+    const [todo, setTodo] = useState([]);
+
+    useDebugValue(`現在のstateはtext: ${text}、todo: ${JSON.stringify(todo)}です`);
+
+    const addTodo = useCallback(
+        value => {
+            const newTodo = [...todo];
+            newTodo.push({ id: performance.now(), value });
+            setTodo(newTodo);
+        },
+        [todo],
+    );
+
+    return {
+        text,
+        setText,
+        item,
+        addTodo,
+    };
+}
+
+function TodoList() {
+    const { text, setText, item, addTodo } = useCustomHooks();
+
+    return (
+        <React.Fragment>
+            <input type="text" onChange={e => setText(e.target.value)} />
+            <button onClick={() => addTodo(text)}>追加</button>
+            {item.map(key => (
+                <p key={key.id}>{key.value}</p>
+            ))}
+        </React.Fragment>
+    );
+}
+```
+
+この簡易的な TodoList コンポーネントは、
+state やメモライズ化した関数の作成などを useCustomHooks というカスタムフックの中で行なっています。
+
+```js
+useDebugValue(`現在の state は text: ${text}、todo: ${JSON.stringify(todo)}です`);
+```
+
+ここが useDebugValue の処理になり、text と todo の値を出力しています。  
+React の開発者ツールの中で確認することができます（コンソールには出力されないので気をつけてください）。
+
+<img width="100%" src='./src/markDowns/imgs/HowToReactHooks/useDebugValue.png'>
+
+#### データフォーマットの遅延処理
+
+useDebugValue は引数を 2 つ受け取ることができ、第一引数に指定された値を元に第二引数でデータのフォーマットを行うことができます。  
+上記の useCustomHooks というカスタムフックを例にとると、
+
+```js
+useDebugValue(todo, todo => JSON.stringify(todo));
+```
+
+このように todo リストの受け取りと JSON シリアライズのタイミングをずらすことができます。  
+useDebugValue は todo に変更があった時のみデバッグを出力するようになります。  
+useEffect や useCallbak の第 2 引数と同じような振る舞いを useDebugValue は第 1 引数と第 2 引数を使って実装します。
+
+### useImperativeHandle
 
 ref に対して特定の処理を紐づけることができる際に使用する API です。
 また、forwardRef を使って ref 経由で親からアクセスさせる際に、ref のオブジェクトをカスタマイズさせるといったことも
@@ -407,9 +491,5 @@ componentDidUpdate と同じタイミングで呼ばれます。
 
 ### useMutationEffect
 
-基本的には useEffect と同じです。
-React が DOM を更新するのと同じタイミングで同期的に呼び出されます。
-
-DOM の更新中に実行されるため、使い方によってはパフォーマンス悪影響を及ぼす可能性があります。
-
-特に理由がない限り、使わないようにする非推奨の API に指定されています。
+**React 16.8.0 がリリースされたタイミングで削除されました。**  
+**もし使っている場合、useEffect か useLayoutEffect に置き換えてください。**
