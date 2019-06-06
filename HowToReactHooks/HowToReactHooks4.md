@@ -112,34 +112,31 @@ function AddItem({ disabled }: Props) {
     const onAddItem = () => {
         if (textValue) {
             dispatch(addItem(textValue));
-            resetText();
+            handleChange('');
         }
     };
     const onReset = () => dispatch(reset());
 
-    useEffect(
-        () => {
-            const onEnter = (e: KeyboardEvent) => {
-                if (e.keyCode === 13 && inputEl.current) {
-                    const item = inputEl.current.value;
-                    if (item) {
-                        dispatch(addItem(item));
-                        resetText();
-                    }
+    useEffect(() => {
+        const onEnter = (e: KeyboardEvent) => {
+            if (e.keyCode === 13 && inputEl.current) {
+                const item = inputEl.current.value;
+                if (item) {
+                    dispatch(addItem(item));
+                    resetText();
                 }
-            };
-
-            window.addEventListener('keydown', onEnter);
-            if (inputEl.current) {
-                inputEl.current.focus();
             }
-            return () => {
-                reset();
-                window.removeEventListener('keydown', onEnter);
-            };
-        },
-        [disabled],
-    );
+        };
+
+        window.addEventListener('keydown', onEnter);
+        if (inputEl.current) {
+            inputEl.current.focus();
+        }
+        return () => {
+            reset();
+            window.removeEventListener('keydown', onEnter);
+        };
+    }, [disabled]);
 
     return (
         <>
@@ -266,7 +263,7 @@ function Switch({ onClick }: Props) {
     return <button onClick={onClick}>スイッチ</button>;
 }
 
-export default React.memo(Switch);
+export default React.memo(Switch, () => true);
 ```
 
 ### ルートとなる ItemList の編集
@@ -289,8 +286,7 @@ type Props = {
 
 function ItemList({ items }: Props) {
     const dispatch = useContext(ItemsContenxt);
-    const _onClick = (index: number) =>
-        useCallback(() => dispatch(changePowerState(index)), [index]);
+    const onClick = useCallback((index: number) => () => dispatch(changePowerState(index)), []);
 
     return (
         <>
@@ -298,7 +294,7 @@ function ItemList({ items }: Props) {
                 <List key={id}>
                     <Item>{name}</Item>
                     <DisplayState power={power} />
-                    <Switch onClick={_onClick(index)} />
+                    <Switch onClick={onClick(index)} />
                 </List>
             ))}
         </>
@@ -327,7 +323,7 @@ export default ItemList;
 -   Action を useCallback を使ってメモライズ化
 
 HowToTypeScript からコードに大きな変更は入っていませんが、onClick を useCallback を使ってメモライズ化するようにしました。  
-useCallback はメモライズ化した関数を返す Hooks の API で、ここでは items の添字（index）をメモライズキーに指定しています。  
+useCallback はメモライズ化した関数を返す Hooks の API で、メモライズキーに空の配列を指定しています。  
 これで、新しい家電が追加されたとしても、関数の再作成を抑制することができます。
 
 ### ループ処理内の useCallback によるメモライズ化
@@ -355,11 +351,20 @@ useCallback の第 2 引数に空の配列を渡すことでメモライズ化�
 この例にならって
 
 ```ts
-const onClick = useCallback(index => () => dispatcher(), []);
+const onClick = useCallback((index: number) => () => dispatcher(index), []);
 ```
 
-と index を受け取るようにすればいいと思うかもしれませんが、これでは**メモライズ化することはできない**ので注意してください。  
-ループ処理内で渡す関数は、useCallback の第 2 引数に index を渡すことでメモライズ化をすることができます。
+とすることで、onClick 関数の再作成を防ぎます。  
+なお、index が渡された段階で`() => dispacter(index)`と新しい関数が作成されているので、子のコンポーネントでは違う値として評価されてしまいますので注意してください。  
+この場合、子コンポーネント側で`React.memo`関数 を使って再レンダリングを防ぎます。  
+上記の Switch.tsx 内では
+
+```ts
+React.memo(Switch, () => true);
+```
+
+onClick を一度受け取った段階で再レンダリングする必要がなくなるので、true を渡して再レンダリングを防いでいます。  
+他にも再レンダリングを防ぐ方法はあります（idnex を props で渡して、React.memo 関数の第 2 引数で評価する）
 
 なお、関数でない index を参照する何らかの変数をメモライズ化したい場合は useMemo を使います。
 
