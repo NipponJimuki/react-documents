@@ -9,7 +9,7 @@ HowToRedux で実装したものを React Hooks の機能のみを使って実�
 実装は全て TypeScript / React です。  
 また、いくつか機能の追加も行います。
 
-2019 年 4 月 2 日現在、React の最新バージョンは 16.8.6  で、16.8.0 以上であれば React Hooks を使うことができます。
+2019 年 8 月 28 日現在、React の最新バージョンは 16.9.0  で、16.8.0 以上であれば React Hooks を使うことができます。
 
 なお、言及してるものの多くは筆者の憶測が多分に含まれておりますので、参考程度の意見として見てください。
 
@@ -26,8 +26,8 @@ Hooks では useState や useReducer など、React ユーザにとって見覚�
 また、recompose という Higher Order Components（以下、HOC）ベースのライブラリーを使ったことがあるユーザにとっても
 見覚えのある書き方がよくでてきます。
 
-なお、componentDidCatch 相当の振る舞いやテストの仕方など、バグや未対応の実装も少なくないです。  
-これから考えていくとのことです。
+なお、componentDidCatch 相当の振る舞いがないなど、未対応の実装がいくつかあります。  
+**完全に置き換えれるものではないということに注意してください。**
 
 ### Hooks の登場によって変わったもの変わりそうなもの
 
@@ -37,7 +37,7 @@ Hooks では useState や useReducer など、React ユーザにとって見覚�
 -   変わったもの
     -   recompose : メンテナンスが打ち切られた
     -   SFC : Function Component に名前が改められた（SFC という言葉はなくなる）
-    -   Redux : react-redux が Hooks との接続を行う対応を開始した
+    -   Redux : react-redux が Hooks との接続を行った
 -   変わりそうなもの
     -   Class Component : いずれ非推奨の書き方になると予想される
     -   HOC : コードの見通しが悪くなる機能と公式が言及
@@ -48,7 +48,7 @@ HOC や renderProp は、非推奨の技術とまでは言われていません�
 Function Component で全て代替できるようになるため、使われなくなっていく技術になると思われます。
 
 また、React の各種サードパーティ（Formik や styled-components）も Hooks に対応してるか否かが
-ライブラリー選定の大きな分かれ目となっていくことが予想されます。
+ライブラリー選定の指標にもなってきます。
 
 #### Class Component と SFC について
 
@@ -87,14 +87,15 @@ ContextAPI や Suspense、Hooks を駆使することで、Redux 無しのアプ
 着実に現実味は帯びてきていますが、まだまだ現実的ではないと思われます。
 
 Redux はピュアな関数群であるため、直接的には影響はありません。  
-現在、React と Redux の接続を担う react-redux 側が Hooks との対応を行っています。
+React と Redux の接続を担う react-redux 側が Hooks との対応を行いました。
 
-react-redux v7.0.0-beta.0 で React との接続を行う ReactReduxContext が外だしされるようになっており、
-こちらを使うと Redux と組み合わせることは可能です。  
-ただし、React が v16.8.4 以降のバージョンであることが必須となっております。
+react-redux v7.1.0 から
 
-react-redux 側は、すぐに Hooks に対応するつもりはないと言及しており、議論を重ねてどう対応していくか考えていく状態です。  
-現状の実装はまだまだ実験的なものであると思われ、プロダクション環境で使うには十分な検討が必要です。
+-   useDispatch
+-   useSelector
+-   useStore
+
+3 つの API が追加され、React との接続を行うことができます。
 
 ## React Hooks で追加された API
 
@@ -403,6 +404,27 @@ return <input type="text" ref={inputEl} />;
 
 初回レンダリング時に input エレメントにフォーカスするような場面で使ったりします。
 基本的な利用用途は今までの ref と同じになります。
+
+#### ref 以外での使用用途
+
+コンポーネントに ref を渡す以外にも活用することができ、
+タイマー ID の初期化やプライベート変数（Class Component の中で定義していた変数）などで useRef を使うこともできます。
+
+```jsx
+const id = useRef(0);
+
+useEffect(() => {
+    id.current = window.setTimeout(() => console.log('mounted'), 10);
+
+    return () => {
+        id.current = window.clearTimeout();
+    };
+}, []);
+```
+
+この例では、コンポーネントマウント時に console.log に`mounted`と出力し、アンマウント時にタイマー ID をリセットするということを行なっています。  
+この他、custom hooks の中で定義している関数のメモ化などにも活用することができ、
+多岐に渡る利用用途があります。
 
 ### useDebugValue
 
