@@ -481,7 +481,7 @@ useDebugValue(`現在の state は text: ${text}、todo: ${JSON.stringify(todo)}
 ここが useDebugValue の処理になり、text と todo の値を出力しています。  
 React の開発者ツールの中で確認することができます（コンソールには出力されないので気をつけてください）。
 
-<img width="100%" src='./src/markDowns/imgs/HowToReactHooks/useDebugValue.png'>
+<img width="100%" src='../img/HowToReactHooks/useDebugValue.png'>
 
 #### データフォーマットの遅延処理
 
